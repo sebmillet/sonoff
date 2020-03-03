@@ -1,7 +1,7 @@
 Sonoff
 ======
 
-This is an Arduino library for managing Sonoff protocol reception of a 48-bit
+This is an Arduino library for managing Sonoff protocol reception of a 24-bit
 code with a 433Mhz receiver device.
 
 
