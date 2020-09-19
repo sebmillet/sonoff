@@ -56,6 +56,8 @@ class Sonoff {
         static void handle_int_receive();
         static void handle_int_wait_free();
 
+        static void wait_free_433();
+
     public:
 
         Sonoff();
@@ -64,9 +66,9 @@ class Sonoff {
         static uint32_t consume_received_val();
 
         static void enter_mode_receive();
-        static void wait_free_433();
 
-        uint32_t get_val();
+        bool is_busy();
+        uint32_t get_val(bool wait = false);
 };
 
 #endif // SONOFF_H

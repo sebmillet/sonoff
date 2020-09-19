@@ -66,6 +66,7 @@ bool Sonoff::has_received_val() {
 
 uint32_t Sonoff::consume_received_val() {
     if (is_available) {
+        detachInterrupt(INT_RFINPUT);
         is_available = false;
         return copy_received_val;
     }
@@ -151,7 +152,9 @@ void Sonoff::handle_int_wait_free() {
 void Sonoff::wait_free_433() {
     count_int = 0;
     count_int_has_cycled = false;
+
     attachInterrupt(INT_RFINPUT, &handle_int_wait_free, CHANGE);
+
     is_recording = false;
 
     unsigned long t0 = micros();
@@ -175,14 +178,26 @@ void Sonoff::wait_free_433() {
                 ++is_code;
         }
     } while ((100 * is_code) / TIMINGS_LEN >= 75);
+
+    detachInterrupt(INT_RFINPUT);
 }
 
-uint32_t Sonoff::get_val() {
+bool Sonoff::is_busy() {
+    return is_recording || is_available;
+}
+
+uint32_t Sonoff::get_val(bool wait) {
     enter_mode_receive();
     sleep_enable();
     set_sleep_mode(SLEEP_MODE_IDLE);
+
     while (!has_received_val())
         sleep_mode();
+
+    if (wait) {
+        wait_free_433();
+    }
+
     return consume_received_val();
 }
 
