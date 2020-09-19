@@ -67,7 +67,7 @@ bool Sonoff::has_received_val() {
 
 uint32_t Sonoff::consume_received_val() {
     uint32_t retval = 0xFFFFFFFF;
-    if (is_in_receive_mode && is_available) {
+    if (is_available) {
         retval = copy_received_val;
     }
     leave_mode_receive();
