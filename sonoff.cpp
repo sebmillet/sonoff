@@ -31,6 +31,7 @@
 
 #include "sonoff.h"
 
+volatile bool Sonoff::is_in_receive_mode = false;
 volatile bool Sonoff::is_recording = false;
 volatile uint32_t Sonoff::received_val = 0;
 volatile uint32_t Sonoff::copy_received_val = 0;
@@ -65,17 +66,27 @@ bool Sonoff::has_received_val() {
 }
 
 uint32_t Sonoff::consume_received_val() {
-    if (is_available) {
-        detachInterrupt(INT_RFINPUT);
-        is_available = false;
-        return copy_received_val;
+    uint32_t retval = 0xFFFFFFFF;
+    if (is_in_receive_mode && is_available) {
+        retval = copy_received_val;
     }
-    return 0xFFFFFFFF;
+    leave_mode_receive();
+    return retval;
+}
+
+void Sonoff::leave_mode_receive() {
+    detachInterrupt(INT_RFINPUT);
+    is_in_receive_mode = false;
+
+    is_available = false;
+    is_recording = false;
 }
 
 void Sonoff::enter_mode_receive() {
     is_available = false;
     is_recording = false;
+
+    is_in_receive_mode = true;
     attachInterrupt(INT_RFINPUT, &handle_int_receive, CHANGE);
 }
 
@@ -89,6 +100,12 @@ void Sonoff::handle_int_receive() {
     const unsigned long duration = t - last_t;
     last_t = t;
     const byte cat = duration_cat(duration);
+
+        // Defensive programming:
+        //   If we are not in receive mode, the interrupt should not occur...
+        //   But who knows, better reject such a case.
+    if (!is_in_receive_mode)
+        return;
 
         // NOTE
         //   Not sure it is wise to read a PIN in an interrupt handler.
@@ -183,7 +200,7 @@ void Sonoff::wait_free_433() {
 }
 
 bool Sonoff::is_busy() {
-    return is_recording || is_available;
+    return is_in_receive_mode && (is_recording || is_available);
 }
 
 uint32_t Sonoff::get_val(bool wait) {
@@ -200,4 +217,10 @@ uint32_t Sonoff::get_val(bool wait) {
 
     return consume_received_val();
 }
+
+//bool Sonoff::get_val_non_blocking(uint32_t* val, bool wait) {
+//    if (!has_received_val())
+//        return false;
+//    return true;
+//}
 

@@ -38,6 +38,10 @@ class Sonoff {
         // DC = Duration Category
         enum { DC_UNKNOWN, DC_SHORT, DC_LONG, DC_SEP };
 
+        volatile static bool is_in_receive_mode;
+        static void enter_mode_receive();
+        static void leave_mode_receive();
+
         volatile static bool is_recording;
         volatile static bool is_available;
         volatile static uint32_t received_val;
@@ -65,10 +69,9 @@ class Sonoff {
         static bool has_received_val();
         static uint32_t consume_received_val();
 
-        static void enter_mode_receive();
-
         bool is_busy();
         uint32_t get_val(bool wait = false);
+//        bool get_val_non_blocking(uint32_t* val, bool wait = false);
 };
 
 #endif // SONOFF_H
