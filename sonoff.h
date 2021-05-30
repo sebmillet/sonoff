@@ -6,7 +6,7 @@
 */
 
 /*
-  Copyright 2020 Sébastien Millet
+  Copyright 2021 Sébastien Millet
 
   sonoff is free software: you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
@@ -60,8 +60,6 @@ class Sonoff {
         static void handle_int_receive();
         static void handle_int_wait_free();
 
-        static void wait_free_433();
-
     public:
 
         Sonoff();
@@ -71,7 +69,9 @@ class Sonoff {
 
         bool is_busy();
         uint32_t get_val(bool wait = false);
-//        bool get_val_non_blocking(uint32_t* val, bool wait = false);
+        bool get_val_non_blocking(uint32_t* val, bool wait = false);
+
+        static void wait_free_433();
 };
 
 #endif // SONOFF_H

@@ -9,7 +9,7 @@
 */
 
 /*
-  Copyright 2020 Sébastien Millet
+  Copyright 2021 Sébastien Millet
 
   sonoff is free software: you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
@@ -218,9 +218,20 @@ uint32_t Sonoff::get_val(bool wait) {
     return consume_received_val();
 }
 
-//bool Sonoff::get_val_non_blocking(uint32_t* val, bool wait) {
-//    if (!has_received_val())
-//        return false;
-//    return true;
-//}
+// Return false if no value received
+// Return true if a value was received, and then in that case:
+//   Set *val to the received value
+bool Sonoff::get_val_non_blocking(uint32_t* val, bool wait) {
+    if (!is_in_receive_mode)
+        enter_mode_receive();
+
+    if (!has_received_val())
+        return false;
+
+    if (wait)
+        wait_free_433();
+
+    *val = consume_received_val();
+    return true;
+}
 
