@@ -29,7 +29,7 @@
 #include <Arduino.h>
 #include <avr/sleep.h>
 
-#include "sonoff.h"
+#include "Sonoff.h"
 
 volatile bool Sonoff::is_in_receive_mode = false;
 volatile bool Sonoff::is_recording = false;

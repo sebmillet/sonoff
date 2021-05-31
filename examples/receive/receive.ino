@@ -29,7 +29,7 @@
   along with this program.  If not, see <https://www.gnu.org/licenses>.
 */
 
-#include "sonoff.h"
+#include "Sonoff.h"
 
 // NOTE
 //   As it is done Today, the code will show absolutely nothing if DEBUG is off.

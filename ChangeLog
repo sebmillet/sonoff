@@ -1,3 +1,10 @@
+2021-05-31 Sébastien Millet <milletseb@laposte.net>
+
+	* Release 1.0.1 built
+	* Renames files from sonoff* to Sonoff*
+	* Renames example to examples and move example in examples sub-folder, as
+	  per arduino-lint recommendation.
+
 2021-05-30 Sébastien Millet <milletseb@laposte.net>
 
 	* Release 1.0.0 built
