@@ -14,5 +14,5 @@ Download a zip of this repository, then include it from the Arduino IDE.
 Usage
 -----
 
-See [example/receive.ino](example/receive.ino) for an example.
+See [examples/receive/receive.ino](examples/receive/receive.ino) for an example.
 
